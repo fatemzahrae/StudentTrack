@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Nastaliq+Urdu:wght@400..700&display=swap');
+
+body{
+    background-color: antiquewhite;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.container{
+    margin: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+.sub-container{
+    display: flex;
+    text-align: center;
+    
+    flex-direction: column;
+    width: 80%;
+    
+}
+
+h1{
+    font-size: 60px;
+    font-weight: 600;
+}
+
+p{
+    margin: 10px;
+}
+
+.add-btn{
+    font-size: 18px;
+    width: 220px;
+    height: 50px;
+    padding: 10px;
+    margin: 20px;
+    border-radius: 20px;
+    border: white;
+    background-color: white;
+    align-self: center;
+    cursor: pointer;
+}
+.add-btn:hover {
+    background-color: black;
+    color: white;
+    
+    
+}
+/*--------- table ----------------------------------*/
+
+#students td, #students th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  
+  }
+  
+  #students tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #students tr:hover {background-color: #ddd;}
+  
+  #students th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #e9e9e9;
+    color: rgb(0, 0, 0);
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  a:hover {
+    text-decoration: none;
+    font-weight: 600;
+  }
+/*------- AddStudent -----------------------*/
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 500px;
+    height: auto;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-content input {
+    width: 90%;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid rgb(170, 170, 170);
+  }
+
+  
+  .modal-content button {
+    margin: 5px;
+    width: 100px;
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid white;
+    background-color: antiquewhite;
+    cursor: pointer;
+  }
+
+  /*-------student page--------------------------------------------*/
+
+  .back{
+    left: 0;
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 17px;
+  }
+  .back-link {
+    display: flex; /* Align icon and text horizontally */
+    align-items: center; /* Vertically center the icon and text */
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Keep default text color */
+  }
+  
+  .back-icon {
+    font-size: 10px; 
+  }
+  
+
+  
+  .back-link:hover {
+    text-decoration: none; /* Optionally underline on hover */
+  }
