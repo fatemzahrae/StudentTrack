@@ -150,3 +150,7 @@ p{
   .back-link:hover {
     text-decoration: none; /* Optionally underline on hover */
   }
+
+  span{
+    font-weight: bold;
+  }

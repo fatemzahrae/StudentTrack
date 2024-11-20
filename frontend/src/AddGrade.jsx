@@ -1,20 +1,38 @@
 import React from 'react'
 import { useState } from 'react';
 import './style.css'
+import axios from 'axios';
 
 
-export default function AddGrade({isOpen, onClose, onAddGrade}) {
+export default function AddGrade({isOpen, onClose, onAddGrade, studentId}) {
     const [course, setCourse] = useState('');
-    const [grade, setGrade] = useState(0);
+    const [grade, setGrade] = useState('');
 
     
     const handleAdd = () => {
-        const creationDate = new Date().toISOString() ;
-        onAddGrade({course: course, grade : grade}) ;
-        setCourse('');
-        setGrade(0);
-        onClose() ;
-    }
+
+        const gradeValue = parseFloat(grade);
+        if (isNaN(gradeValue)) {
+            alert("Please enter a valid grade.");
+            return;
+        }
+
+        const studentGrade = {subject: course, grade : gradeValue} ;
+        onAddGrade(studentGrade) ;
+        axios.post(`http://localhost:8080/grades/student/${studentId}`,studentGrade )
+        .then(res =>{
+            console.log(res);
+            console.log(res.data);
+            setCourse("");
+            setGrade("");
+            onClose() ;
+        })
+        .catch((error) => {
+            console.error("Error adding grade:", error);
+            alert("Failed to add grade. Please try again.");
+        });
+    
+    };
 
     if (!isOpen) return null ;
 

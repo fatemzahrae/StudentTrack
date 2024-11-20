@@ -1,6 +1,7 @@
 package com.project.exam.controller;
 
 import com.project.exam.entities.Grade;
+import com.project.exam.entities.Student;
 import com.project.exam.service.GradeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +18,13 @@ public class GradeController {
         this.gradeService = gradeService;
     }
 
-    @GetMapping
-    public List<Grade> getAllGrades(){
-        return gradeService.getAllGrades() ;
+    @GetMapping("/student/{studentId}")
+    public List<Grade> getGradesByStudent(@PathVariable Long studentId){
+        return gradeService.getGradesByStudentId(studentId) ;
     }
 
-    @PostMapping
-    public ResponseEntity<Grade> saveGrade(@RequestBody Grade grade){
-        return ResponseEntity.ok(gradeService.saveGrade(grade));
+    @PostMapping("/student/{studentId}")
+    public Student addGradeToStudent(@PathVariable Long studentId, @RequestBody Grade grade){
+        return gradeService.addGradeToStudent(studentId, grade) ;
     }
 }

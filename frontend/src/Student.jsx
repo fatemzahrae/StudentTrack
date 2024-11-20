@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from 'react'
+import { Link, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,16 +11,36 @@ import Paper from '@mui/material/Paper';
 import './style.css'
 import AddGrade from './AddGrade';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import axios from 'axios';
 
 export default function Student() {
-    
-    const [grades, setGrades] = useState([
-        { id: 1, course: 'Math', grade: 15 },
-        { id: 2, course: 'Physics', grade: 10 },
-      ]);
+
+    const { studentId } = useParams();
+    const [studentName, setStudentName] = useState("") 
+    console.log("Student ID:", studentId);
+
+    const [grades, setGrades] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false) ;
+
+    useEffect(() => {
+      axios.get(`http://localhost:8080/students/${studentId}`)
+      .then((res) => {
+        setStudentName(res.data.name) ;
+      })
+      .catch((error) =>{
+        console.error('error fetching student : ', error);
+      })
+    })
     
-    
+    useEffect(() => {
+      axios.get(`http://localhost:8080/grades/student/${studentId}`)
+      .then((res) => {
+        setGrades(res.data);
+      })
+      .catch((error) => {
+        console.error('error fetching grades :',error );
+      })
+    }, [studentId]);
     
     const handleCloseModal = () =>{
         setIsModalOpen(false);
@@ -69,23 +89,23 @@ export default function Student() {
     <div className='container'>
         <h1>Student Details</h1>
         <div className='sub-container'>
-            <p>View and manage student grades in all courses</p>
+            <p>View and manage <span>{studentName}</span> grades in all courses</p>
             <button className='add-btn' onClick={handleOpenModal}>Add new grade</button>
 
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 500 }} aria-label="customized table">
                     <TableHead>
                     <TableRow>
-                        <StyledTableCell align="center">Courses</StyledTableCell>
+                        <StyledTableCell align="center">Subjects</StyledTableCell>
                         <StyledTableCell align="center">Grades</StyledTableCell>
 
                     </TableRow>
                     </TableHead>
                     <TableBody>
                     {grades.map((row) => (
-                        <StyledTableRow key={row.course}>
+                        <StyledTableRow key={row.subject}>
                         <StyledTableCell align="center" component="th" scope="row">
-                           {row.course}
+                           {row.subject}
                         </StyledTableCell>
                         <StyledTableCell align="center">{row.grade}</StyledTableCell>
 
@@ -99,6 +119,7 @@ export default function Student() {
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
                 onAddGrade={handleAddGrade}
+                studentId = {studentId}
             />
         </div>
       

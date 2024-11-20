@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './style.css'
@@ -11,16 +11,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
 
 export default function Home() {
 
-    const [students, setStudents] = useState([
-        { id: 1, name: 'John Doe', date: '2024-11-18' },
-        { id: 2, name: 'Jane Smith', date: '2024-11-18' },
-      ]);
+    const [students, setStudents] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false) ;
     
-    
+    useEffect(() => {
+      axios.get("http://localhost:8080/students")
+    .then((res) => {
+      setStudents(res.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching students :", error);
+    })
+    }, []);
     
     const handleCloseModal = () =>{
         setIsModalOpen(false);
@@ -69,7 +75,7 @@ export default function Home() {
             <button className='add-btn' onClick={handleOpenModal}>Add new student</button>
 
             <TableContainer component={Paper}>
-                <Table  aria-label="customized table">
+                <Table sx={{ minWidth: 500 }} aria-label="customized table">
                     <TableHead>
                     <TableRow>
                         <StyledTableCell align="center">Name</StyledTableCell>
@@ -81,9 +87,9 @@ export default function Home() {
                     {students.map((row) => (
                         <StyledTableRow key={row.name}>
                         <StyledTableCell align="center" component="th" scope="row">
-                           <Link to={`/student/${row.id}`}> {row.name} </Link>
+                           <Link to={`/students/${row.id}`}> {row.name} </Link>
                         </StyledTableCell>
-                        <StyledTableCell align="center">{row.date}</StyledTableCell>
+                        <StyledTableCell align="center">{row.creation_date}</StyledTableCell>
 
                         </StyledTableRow>
                     ))}
