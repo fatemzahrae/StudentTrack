@@ -1,7 +1,7 @@
 package com.project.exam.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,7 +18,7 @@ public class Grade {
 
     @ManyToOne
     @JoinColumn(name = "student_id")
-    @JsonManagedReference
+    @JsonBackReference
     private Student student;
 
 

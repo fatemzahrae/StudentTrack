@@ -17,29 +17,34 @@ export default function Student() {
 
     const { studentId } = useParams();
     const [studentName, setStudentName] = useState("") 
-    console.log("Student ID:", studentId);
 
     const [grades, setGrades] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false) ;
 
     useEffect(() => {
-      axios.get(`http://localhost:8080/students/${studentId}`)
-      .then((res) => {
-        setStudentName(res.data.name) ;
-      })
-      .catch((error) =>{
-        console.error('error fetching student : ', error);
-      })
-    })
-    
+      if (studentId) {
+        axios
+          .get(`http://localhost:8080/students/${studentId}`)
+          .then((res) => {
+            setStudentName(res.data.name);
+          })
+          .catch((error) => {
+            console.error("Error fetching student:", error);
+          });
+      }
+    }, [studentId]); 
+  
     useEffect(() => {
-      axios.get(`http://localhost:8080/grades/student/${studentId}`)
-      .then((res) => {
-        setGrades(res.data);
-      })
-      .catch((error) => {
-        console.error('error fetching grades :',error );
-      })
+      if (studentId) {
+        axios
+          .get(`http://localhost:8080/grades/student/${studentId}`)
+          .then((res) => {
+            setGrades(res.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching grades:", error);
+          });
+      }
     }, [studentId]);
     
     const handleCloseModal = () =>{

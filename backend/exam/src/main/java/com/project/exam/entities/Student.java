@@ -17,6 +17,7 @@ public class Student{
     private String name ;
     private LocalDate creation_date ;
 
+
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Grade> grades ;

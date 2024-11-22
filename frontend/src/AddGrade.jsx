@@ -8,6 +8,8 @@ export default function AddGrade({isOpen, onClose, onAddGrade, studentId}) {
     const [course, setCourse] = useState('');
     const [grade, setGrade] = useState('');
 
+    console.log("Student ID from URL:", studentId);
+
     
     const handleAdd = () => {
 
@@ -19,6 +21,8 @@ export default function AddGrade({isOpen, onClose, onAddGrade, studentId}) {
 
         const studentGrade = {subject: course, grade : gradeValue} ;
         onAddGrade(studentGrade) ;
+        console.log("Adding grade with studentId:", studentId);
+        console.log("Payload:", studentGrade);
         axios.post(`http://localhost:8080/grades/student/${studentId}`,studentGrade )
         .then(res =>{
             console.log(res);
