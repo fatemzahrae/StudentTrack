@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:9.1.0
+    image: localhost:5000/mysql
     container_name: db
     restart: always
     environment:
@@ -16,9 +16,7 @@ services:
       - app_net
 
   backend:
-    build:
-      context: ./backend/exam
-      dockerfile: Dockerfile
+    image: localhost:5000/backend
     container_name: backend
     restart: always
     environment:
@@ -33,9 +31,7 @@ services:
       - app_net
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: localhost:5000/frontend
     container_name: frontend
     restart: always
     ports:
