@@ -3,11 +3,11 @@ package com.project.exam.controller;
 import com.project.exam.entities.Grade;
 import com.project.exam.entities.Student;
 import com.project.exam.service.GradeService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/grades")
 public class GradeController {

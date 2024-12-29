@@ -7,11 +7,18 @@ import axios from 'axios';
 export default function AddGrade({isOpen, onClose, onAddGrade, studentId}) {
     const [course, setCourse] = useState('');
     const [grade, setGrade] = useState('');
-
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://backend:8080";
+    const [isSubmitting, setIsSubmitting] = useState(false);
     console.log("Student ID from URL:", studentId);
+
 
     
     const handleAdd = () => {
+
+        if (!course.trim()) {
+            alert("Course name cannot be empty!");
+            return;
+        }
 
         const gradeValue = parseFloat(grade);
         if (isNaN(gradeValue)) {
@@ -21,22 +28,28 @@ export default function AddGrade({isOpen, onClose, onAddGrade, studentId}) {
 
         const studentGrade = {subject: course, grade : gradeValue} ;
         onAddGrade(studentGrade) ;
+
         console.log("Adding grade with studentId:", studentId);
         console.log("Payload:", studentGrade);
-        axios.post(`http://localhost:8080/grades/student/${studentId}`,studentGrade )
-        .then(res =>{
-            console.log(res);
-            console.log(res.data);
-            setCourse("");
-            setGrade("");
-            onClose() ;
-        })
-        .catch((error) => {
-            console.error("Error adding grade:", error);
-            alert("Failed to add grade. Please try again.");
-        });
-    
-    };
+        setIsSubmitting(true);
+
+       axios
+      .post(`${backendUrl}/grades/student/${studentId}`, studentGrade)
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
+        setCourse("");
+        setGrade("");
+        onClose(); // Close the modal
+      })
+      .catch((error) => {
+        console.error("Error adding grade:", error);
+        alert("Failed to add grade. Please try again.");
+      })
+      .finally(() => {
+        setIsSubmitting(false); 
+      });
+  };
 
     if (!isOpen) return null ;
 
@@ -59,7 +72,9 @@ export default function AddGrade({isOpen, onClose, onAddGrade, studentId}) {
                     onChange={(e) => setGrade(e.target.value)}
                     />
                 <br />
-                <button onClick={handleAdd}>Add</button>
+                <button onClick={handleAdd} disabled={isSubmitting}>
+                   {isSubmitting ? "Adding..." : "Add"}
+                </button>
                 <button onClick={onClose}>Cancel</button>
             </div>
         </div>

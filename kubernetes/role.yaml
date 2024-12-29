@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: resource-access
+  namespace: exam
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "configmaps", "secrets"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: access-binding
+  namespace: exam
+subjects:
+  - kind: User
+    name: your-username
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: resource-access
+  apiGroup: rbac.authorization.k8s.io

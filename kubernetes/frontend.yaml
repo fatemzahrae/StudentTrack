@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: exam
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: fatemzahra/frontend:1.0
+          ports:
+            - containerPort: 3000
+
+          env:
+            - name: REACT_APP_BACKEND_URL
+              value: "http://backend.student-app.local/"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "300m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: exam
+spec:
+  selector:
+    app: frontend
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

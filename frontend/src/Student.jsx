@@ -14,17 +14,16 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import axios from 'axios';
 
 export default function Student() {
-
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://backend:8080";
     const { studentId } = useParams();
     const [studentName, setStudentName] = useState("") 
-
     const [grades, setGrades] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false) ;
 
     useEffect(() => {
       if (studentId) {
         axios
-          .get(`http://localhost:8080/students/${studentId}`)
+          .get(`${backendUrl}/students/${studentId}`)
           .then((res) => {
             setStudentName(res.data.name);
           })
@@ -32,12 +31,12 @@ export default function Student() {
             console.error("Error fetching student:", error);
           });
       }
-    }, [studentId]); 
+    }, [studentId, backendUrl]); 
   
     useEffect(() => {
       if (studentId) {
         axios
-          .get(`http://localhost:8080/grades/student/${studentId}`)
+          .get(`${backendUrl}/grades/student/${studentId}`)
           .then((res) => {
             setGrades(res.data);
           })
@@ -45,7 +44,7 @@ export default function Student() {
             console.error("Error fetching grades:", error);
           });
       }
-    }, [studentId]);
+    }, [studentId, backendUrl]); 
     
     const handleCloseModal = () =>{
         setIsModalOpen(false);
@@ -62,25 +61,23 @@ export default function Student() {
 
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-          backgroundColor: theme.palette.common.black,
-          color: theme.palette.common.white,
-          
-        },
-        [`&.${tableCellClasses.body}`]: {
-          fontSize: 14,
-        },
-      }));
-
-      const StyledTableRow = styled(TableRow)(({ theme }) => ({
-        '&:nth-of-type(odd)': {
-          backgroundColor: theme.palette.action.hover,
-        },
-        
-        '&:last-child td, &:last-child th': {
-          border: 0,
-        },
-      }));
+      "&.MuiTableCell-head": { 
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+      },
+      "&.MuiTableCell-body": {  
+        fontSize: 14,
+      },
+    }));
+    
+    const StyledTableRow = styled(TableRow)(({ theme }) => ({
+      "&:nth-of-type(odd)": {
+        backgroundColor: theme.palette.action.hover,
+      },
+      "&:last-child td, &:last-child th": {
+        border: 0,
+      },
+    }));
 
 
   return (

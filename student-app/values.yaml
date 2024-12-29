@@ -1,0 +1,51 @@
+replicaCount: 2
+
+frontend:
+  image:
+    repository: fatemzahra/frontend
+    tag: "1.0"
+  environment:
+    REACT_APP_BACKEND_URL: http://localhost:30081
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+    reservations:
+      cpu: "250m"
+      memory: "256Mi"
+
+backend:
+  image:
+    repository: fatemzahra/backend
+    tag: "1.0"
+  environment:
+  SPRING_DATASOURCE_URL: jdbc:mysql://student-app-database:3306/studenttrack
+  SPRING_DATASOURCE_USERNAME: c3R1ZGVudGFkbWlu
+  SPRING_DATASOURCE_PASSWORD: YWRtaW5wYXNzd29yZA==
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+    reservations:
+      cpu: "250m"
+      memory: "256Mi"
+
+database:
+  image:
+    repository: mysql
+    tag: "8.0.40-debian"
+  environment:
+    MYSQL_ROOT_PASSWORD: rootpassword
+    MYSQL_DATABASE: studenttrack
+    MYSQL_USER: c3R1ZGVudGFkbWlu
+    MYSQL_PASSWORD: YWRtaW5wYXNzd29yZA==
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+    reservations:
+      cpu: "250m"
+      memory: "512Mi"
+  persistence:
+    enabled: true
+    size: 1Gi

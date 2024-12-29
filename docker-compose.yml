@@ -1,49 +1,97 @@
 version: '3.8'
 
 services:
-  db:
-    image: localhost:5000/mysql
-    container_name: db
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+  nginx:
+    image: nginx:stable-alpine3.20-perl
     ports:
-      - "3306:3306"
+      - "80:80" 
     volumes:
-      - db_data:/var/lib/mysql
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
-      - app_net
-
-  backend:
-    image: localhost:5000/backend
-    container_name: backend
-    restart: always
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-    ports:
-      - "8080:8080"
+      - app-network
     depends_on:
-      - db
-    networks:
-      - app_net
+      - frontend
+      - backend
+
 
   frontend:
-    image: localhost:5000/frontend
-    container_name: frontend
-    restart: always
-    ports:
-      - "3000:3000"
+    image: fatemzahra/frontend:1.0
+    networks:
+      - app-network
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend.local
     depends_on:
       - backend
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+
+  backend:
+    image: fatemzahra/backend:1.0
     networks:
-      - app_net
+      - app-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/studenttrack
+      - SPRING_DATASOURCE_USERNAME=studentadmin
+      - SPRING_DATASOURCE_PASSWORD=adminpassword
+    depends_on:
+      - db
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+
+  db:
+    image: mysql:8.0.40-debian
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: studenttrack
+      MYSQL_USER: studentadmin
+      MYSQL_PASSWORD: adminpassword
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+    volumes:
+      - db_data:/var/lib/mysql
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 512M
+      restart_policy:
+        condition: on-failure
 
 volumes:
   db_data:
+    driver: local
+
 
 networks:
-  app_net:
-    driver: bridge
+  app-network:
+    driver: overlay
